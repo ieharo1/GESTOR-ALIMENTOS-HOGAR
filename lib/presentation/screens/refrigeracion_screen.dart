@@ -86,6 +86,59 @@ class _RefrigeracionScreenState extends State<RefrigeracionScreen>
     );
   }
 
+  void _showEditItemForm(item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AddFoodItemForm(
+        showTypeSelector: true,
+        initialName: item.name,
+        initialQuantity: item.quantity,
+        initialDate: item.entryDate,
+        initialType: item.type,
+        isEditing: true,
+        onSave: (name, quantity, entryDate, type) async {
+          final provider = context.read<FoodProvider>();
+          final updatedItem = item.copyWith(
+            name: name,
+            quantity: quantity,
+            entryDate: entryDate,
+            type: type,
+          );
+          final success = await provider.updateItem(updatedItem);
+          
+          if (mounted) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(
+                      success ? Icons.check_circle : Icons.error,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      success
+                          ? AppConstants.successItemUpdated
+                          : AppConstants.errorGeneric,
+                    ),
+                  ],
+                ),
+                backgroundColor: success ? Colors.green : Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -267,6 +320,7 @@ class _RefrigeracionScreenState extends State<RefrigeracionScreen>
           final item = provider.items[index];
           return FoodItemCard(
             item: item,
+            onEdit: () => _showEditItemForm(item),
             onDelete: () async {
               final success = await provider.deleteItem(item.id);
               if (mounted) {

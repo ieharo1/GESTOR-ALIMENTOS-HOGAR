@@ -177,34 +177,66 @@ class AboutScreen extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         _SocialButton(
-          icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
           label: 'WhatsApp',
           subtitle: '098805517',
-          color: Colors.green.shade600,
+          color: const Color(0xFF25D366),
+          iconWidget: Container(
+            width: 28,
+            height: 28,
+            decoration: const BoxDecoration(
+              color: Color(0xFF25D366),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.chat, color: Colors.white, size: 18),
+          ),
           onTap: () => _launchUrl('https://wa.me/59398805517'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
-          icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
           label: 'GitHub',
           subtitle: 'ieharo1',
           color: Colors.black87,
+          iconWidget: Container(
+            width: 28,
+            height: 28,
+            decoration: const BoxDecoration(
+              color: Color(0xFF333333),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.code, color: Colors.white, size: 18),
+          ),
           onTap: () => _launchUrl('https://github.com/ieharo1'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
-          icon: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Gmail_%28en%29.svg',
           label: 'Email',
           subtitle: 'zackharo1@gmail.com',
           color: Colors.red.shade600,
+          iconWidget: Container(
+            width: 28,
+            height: 28,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEA4335),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.email, color: Colors.white, size: 18),
+          ),
           onTap: () => _launchUrl('mailto:zackharo1@gmail.com'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
-          icon: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Portfolio_icon.svg',
           label: 'Portafolio',
           subtitle: 'ieharo1.github.io',
           color: colorScheme.primary,
+          iconWidget: Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.language, color: Colors.white, size: 18),
+          ),
           onTap: () => _launchUrl('https://ieharo1.github.io/portafolio-isaac.haro/'),
         ),
       ],
@@ -216,6 +248,14 @@ class AboutScreen extends StatelessWidget {
       children: [
         Divider(color: colorScheme.outline.withAlpha(50)),
         const SizedBox(height: 16),
+        Text(
+          'Desarrollado por Isaac Esteban Haro Torres',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -246,17 +286,17 @@ class AboutScreen extends StatelessWidget {
 }
 
 class _SocialButton extends StatelessWidget {
-  final String icon;
   final String label;
   final String subtitle;
   final Color color;
+  final Widget iconWidget;
   final VoidCallback onTap;
 
   const _SocialButton({
-    required this.icon,
     required this.label,
     required this.subtitle,
     required this.color,
+    required this.iconWidget,
     required this.onTap,
   });
 
@@ -295,13 +335,7 @@ class _SocialButton extends StatelessWidget {
                   color: color.withAlpha(20),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: icon.contains('whatsapp')
-                    ? const _WhatsAppIcon()
-                    : icon.contains('github')
-                        ? const _GitHubIcon()
-                        : icon.contains('gmail')
-                            ? const _EmailIcon()
-                            : const _WebIcon(),
+                child: iconWidget,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -331,90 +365,6 @@ class _SocialButton extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _WhatsAppIcon extends StatelessWidget {
-  const _WhatsAppIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: const BoxDecoration(
-        color: Color(0xFF25D366),
-        shape: BoxShape.circle,
-      ),
-      child: const Icon(
-        Icons.chat,
-        color: Colors.white,
-        size: 18,
-      ),
-    );
-  }
-}
-
-class _GitHubIcon extends StatelessWidget {
-  const _GitHubIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: const BoxDecoration(
-        color: Color(0xFF333333),
-        shape: BoxShape.circle,
-      ),
-      child: const Icon(
-        Icons.code,
-        color: Colors.white,
-        size: 18,
-      ),
-    );
-  }
-}
-
-class _EmailIcon extends StatelessWidget {
-  const _EmailIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: const BoxDecoration(
-        color: Color(0xFFEA4335),
-        shape: BoxShape.circle,
-      ),
-      child: const Icon(
-        Icons.email,
-        color: Colors.white,
-        size: 18,
-      ),
-    );
-  }
-}
-
-class _WebIcon extends StatelessWidget {
-  const _WebIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1565C0),
-        shape: BoxShape.circle,
-      ),
-      child: const Icon(
-        Icons.language,
-        color: Colors.white,
-        size: 18,
       ),
     );
   }

@@ -6,12 +6,14 @@ class FoodItemCard extends StatelessWidget {
   final FoodItem item;
   final VoidCallback onDelete;
   final VoidCallback? onTap;
+  final VoidCallback? onEdit;
 
   const FoodItemCard({
     super.key,
     required this.item,
     required this.onDelete,
     this.onTap,
+    this.onEdit,
   });
 
   @override
@@ -141,24 +143,48 @@ class FoodItemCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => _showDeleteDialog(context),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: colorScheme.errorContainer.withAlpha(100),
+                    Column(
+                      children: [
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: onEdit,
                             borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.delete_outline,
-                            color: colorScheme.error,
-                            size: 22,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primaryContainer.withAlpha(100),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.edit_outlined,
+                                color: colorScheme.primary,
+                                size: 22,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _showDeleteDialog(context),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: colorScheme.errorContainer.withAlpha(100),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.delete_outline,
+                                color: colorScheme.error,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

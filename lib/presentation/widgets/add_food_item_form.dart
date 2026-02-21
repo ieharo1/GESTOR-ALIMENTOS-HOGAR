@@ -6,11 +6,21 @@ import '../../core/constants/app_constants.dart';
 class AddFoodItemForm extends StatefulWidget {
   final bool showTypeSelector;
   final Function(String name, int quantity, DateTime entryDate, String? type) onSave;
+  final String? initialName;
+  final int? initialQuantity;
+  final DateTime? initialDate;
+  final String? initialType;
+  final bool isEditing;
 
   const AddFoodItemForm({
     super.key,
     required this.showTypeSelector,
     required this.onSave,
+    this.initialName,
+    this.initialQuantity,
+    this.initialDate,
+    this.initialType,
+    this.isEditing = false,
   });
 
   @override
@@ -44,6 +54,14 @@ class _AddFoodItemFormState extends State<AddFoodItemForm>
       parent: _animationController,
       curve: Curves.easeOut,
     );
+    
+    if (widget.isEditing) {
+      _nameController.text = widget.initialName ?? '';
+      _quantityController.text = widget.initialQuantity?.toString() ?? '';
+      _selectedDate = widget.initialDate ?? DateTime.now();
+      _selectedType = widget.initialType;
+    }
+    
     _animationController.forward();
   }
 
@@ -162,7 +180,7 @@ class _AddFoodItemFormState extends State<AddFoodItemForm>
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          'Nuevo Artículo',
+                          widget.isEditing ? 'Editar Artículo' : 'Nuevo Artículo',
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -476,13 +494,16 @@ class _AddFoodItemFormState extends State<AddFoodItemForm>
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 18),
-            child: Row(
+              child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.save, color: Colors.white),
+                Icon(
+                  widget.isEditing ? Icons.update : Icons.save, 
+                  color: Colors.white
+                ),
                 const SizedBox(width: 10),
                 Text(
-                  'Guardar Artículo',
+                  widget.isEditing ? 'Actualizar Artículo' : 'Guardar Artículo',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
