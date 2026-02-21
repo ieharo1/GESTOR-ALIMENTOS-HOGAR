@@ -195,7 +195,7 @@ La aplicación usa **Hive** para persistencia local:
 
 ## Desarrollado por Isaac Esteban Haro Torres
 
-**Ingeniero en Sistemas · Full Stack · Automatizacion · Data**
+**Ingeniero en Sistemas · Full Stack Developer · Automatizacion · Data**
 
 - Email: zackharo1@gmail.com
 - WhatsApp: 098805517

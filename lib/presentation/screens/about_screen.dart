@@ -4,10 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
-  Future<void> _launchUrl(String url) async {
+  Future<void> _launchUrl(BuildContext context, String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    final launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo abrir el enlace.')),
+      );
     }
   }
 
@@ -135,7 +138,7 @@ class AboutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Isaac Esteban Haro Torres',
+            'Desarrollado por Isaac Esteban Haro Torres',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -149,7 +152,7 @@ class AboutScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Ingeniero en Sistemas · Full Stack · Automatizacion · Data',
+              'Ingeniero en Sistemas · Full Stack Developer',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -178,7 +181,7 @@ class AboutScreen extends StatelessWidget {
         const SizedBox(height: 20),
         _SocialButton(
           label: 'WhatsApp',
-          subtitle: '098805517',
+          subtitle: '0988055517',
           color: const Color(0xFF25D366),
           iconWidget: Container(
             width: 28,
@@ -189,7 +192,7 @@ class AboutScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.chat, color: Colors.white, size: 18),
           ),
-          onTap: () => _launchUrl('https://wa.me/59398805517'),
+          onTap: (context) => _launchUrl(context, 'https://wa.me/593988055517'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
@@ -205,7 +208,7 @@ class AboutScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.code, color: Colors.white, size: 18),
           ),
-          onTap: () => _launchUrl('https://github.com/ieharo1'),
+          onTap: (context) => _launchUrl(context, 'https://github.com/ieharo1'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
@@ -221,7 +224,7 @@ class AboutScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.email, color: Colors.white, size: 18),
           ),
-          onTap: () => _launchUrl('mailto:zackharo1@gmail.com'),
+          onTap: (context) => _launchUrl(context, 'mailto:zackharo1@gmail.com'),
         ),
         const SizedBox(height: 12),
         _SocialButton(
@@ -237,7 +240,10 @@ class AboutScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.language, color: Colors.white, size: 18),
           ),
-          onTap: () => _launchUrl('https://ieharo1.github.io/portafolio-isaac.haro/'),
+          onTap: (context) => _launchUrl(
+            context,
+            'https://ieharo1.github.io/portafolio-isaac.haro/',
+          ),
         ),
       ],
     );
@@ -290,7 +296,7 @@ class _SocialButton extends StatelessWidget {
   final String subtitle;
   final Color color;
   final Widget iconWidget;
-  final VoidCallback onTap;
+  final ValueChanged<BuildContext> onTap;
 
   const _SocialButton({
     required this.label,
@@ -307,7 +313,7 @@ class _SocialButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: () => onTap(context),
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.all(16),
