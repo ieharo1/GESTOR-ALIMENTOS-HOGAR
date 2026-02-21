@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'core/constants/app_constants.dart';
 import 'data/database/database_service.dart';
@@ -19,6 +21,7 @@ void main() async {
     ),
   );
   
+  await initializeDateFormatting('es_ES', null);
   await Hive.initFlutter();
   final databaseService = await DatabaseService.getInstance();
   final foodRepository = FoodRepository(databaseService);
@@ -46,6 +49,16 @@ class GestorAlimentosApp extends StatelessWidget {
       theme: _buildLightTheme(),
       darkTheme: _buildDarkTheme(),
       themeMode: ThemeMode.system,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', 'ES'),
+        Locale('en', 'US'),
+      ],
+      locale: const Locale('es', 'ES'),
       home: const HomeScreen(),
     );
   }

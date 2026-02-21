@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
 import 'refrigeracion_screen.dart';
 import 'alacena_screen.dart';
+import 'about_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -90,6 +91,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                     const Spacer(),
                     _buildOfflineBadge(theme, colorScheme),
+                    const SizedBox(height: 16),
+                    _buildAboutButton(theme, colorScheme),
+                    const SizedBox(height: 8),
+                    _buildFooter(theme, colorScheme),
                   ],
                 ),
               ),
@@ -184,6 +189,43 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAboutButton(ThemeData theme, ColorScheme colorScheme) {
+    return TextButton.icon(
+      onPressed: () => _navigateTo(context, const AboutScreen()),
+      icon: Icon(
+        Icons.info_outline,
+        color: colorScheme.primary,
+      ),
+      label: Text(
+        'Acerca de',
+        style: TextStyle(
+          color: colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter(ThemeData theme, ColorScheme colorScheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.copyright,
+          size: 14,
+          color: colorScheme.outline,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '2026 Isaac Esteban Haro Torres',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.outline,
+          ),
+        ),
+      ],
     );
   }
 
