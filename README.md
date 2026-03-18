@@ -1,6 +1,8 @@
-# 🐟 Gestor de Alimentos Hogar
+# 🥚 Gestor de Alimentos Hogar
 
-![Logo de la App](assets/logo.png)
+<p align="center">
+  <img src="assets/logo.png" alt="Logo de la App" width="200"/>
+</p>
 
 ---
 
