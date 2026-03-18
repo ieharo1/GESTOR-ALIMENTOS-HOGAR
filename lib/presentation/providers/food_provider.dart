@@ -107,4 +107,21 @@ class FoodProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
   }
+
+  List<FoodItem> getItemsToBuy() {
+    return _repository.getAllFoodItems().where((item) => item.quantity == 0).toList();
+  }
+
+  List<FoodItem> getLowStockItems() {
+    final now = DateTime.now();
+    return _repository.getAllFoodItems().where((item) {
+      if (item.quantity == 0) return false;
+      final daysUntilExpiry = item.expirationDate.difference(now).inDays;
+      return daysUntilExpiry <= 3 && daysUntilExpiry >= 0;
+    }).toList();
+  }
+
+  List<FoodItem> getAllItems() {
+    return _repository.getAllFoodItems();
+  }
 }

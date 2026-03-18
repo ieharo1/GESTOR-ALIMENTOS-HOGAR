@@ -231,8 +231,8 @@ class _AddFoodItemFormState extends State<AddFoodItemForm>
                       return AppConstants.validationQuantityRequired;
                     }
                     final quantity = int.tryParse(value);
-                    if (quantity == null || quantity <= 0) {
-                      return AppConstants.validationQuantityPositive;
+                    if (quantity == null || quantity < 0) {
+                      return 'La cantidad no puede ser negativa';
                     }
                     return null;
                   },

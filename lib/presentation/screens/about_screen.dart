@@ -36,7 +36,9 @@ class AboutScreen extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                _buildBackButton(context, colorScheme),
+                const SizedBox(height: 10),
                 _buildHeader(theme, colorScheme),
                 const SizedBox(height: 40),
                 _buildDeveloperCard(theme, colorScheme),
@@ -49,6 +51,33 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBackButton(BuildContext context, ColorScheme colorScheme) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [colorScheme.primary, colorScheme.secondary],
+              ),
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withAlpha(60),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+        ),
+      ],
     );
   }
 

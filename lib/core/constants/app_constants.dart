@@ -2,7 +2,7 @@ class AppConstants {
   static const String appName = 'Gestor de Alimentos Hogar';
   
   // Categories
-  static const String categoryRefrigeracion = 'Refrigeracion';
+  static const String categoryRefrigeracion = 'Refrigeración';
   static const String categoryAlacena = 'Alacena';
   
   // Food Types

@@ -19,6 +19,9 @@ class FoodItem extends HiveObject {
   @HiveField(5)
   final DateTime entryDate;
 
+  @HiveField(6)
+  final DateTime expirationDate;
+
   FoodItem({
     required this.id,
     required this.category,
@@ -26,7 +29,8 @@ class FoodItem extends HiveObject {
     required this.name,
     required this.quantity,
     required this.entryDate,
-  });
+    DateTime? expirationDate,
+  }) : expirationDate = expirationDate ?? entryDate.add(const Duration(days: 7));
 
   FoodItem copyWith({
     String? id,
@@ -35,6 +39,7 @@ class FoodItem extends HiveObject {
     String? name,
     int? quantity,
     DateTime? entryDate,
+    DateTime? expirationDate,
   }) {
     return FoodItem(
       id: id ?? this.id,
@@ -43,6 +48,7 @@ class FoodItem extends HiveObject {
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
       entryDate: entryDate ?? this.entryDate,
+      expirationDate: expirationDate ?? this.expirationDate,
     );
   }
 }
@@ -64,13 +70,14 @@ class FoodItemAdapter extends TypeAdapter<FoodItem> {
       name: fields[3] as String,
       quantity: fields[4] as int,
       entryDate: fields[5] as DateTime,
+      expirationDate: numOfFields > 6 ? fields[6] as DateTime : null,
     );
   }
 
   @override
   void write(BinaryWriter writer, FoodItem obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -82,7 +89,9 @@ class FoodItemAdapter extends TypeAdapter<FoodItem> {
       ..writeByte(4)
       ..write(obj.quantity)
       ..writeByte(5)
-      ..write(obj.entryDate);
+      ..write(obj.entryDate)
+      ..writeByte(6)
+      ..write(obj.expirationDate);
   }
 
   @override

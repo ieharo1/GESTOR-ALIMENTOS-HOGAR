@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dart:ui' as ui;
 import '../../core/constants/app_constants.dart';
+import '../providers/food_provider.dart';
 import 'refrigeracion_screen.dart';
 import 'alacena_screen.dart';
 import 'about_screen.dart';
+import 'shopping_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,41 +67,37 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildHeader(theme, colorScheme),
-                    const SizedBox(height: 48),
-                    _CategoryCard(
-                      title: 'Refrigeración',
-                      subtitle: 'Alimentos refrigerados y congelados',
-                      icon: Icons.kitchen,
-                      gradientColors: [Colors.blue.shade600, Colors.cyan.shade400],
-                      onTap: () => _navigateTo(context, const RefrigeracionScreen()),
-                    ),
-                    const SizedBox(height: 24),
-                    _CategoryCard(
-                      title: 'Alacena',
-                      subtitle: 'Artículos en despensa',
-                      icon: Icons.shelves,
-                      gradientColors: [Colors.teal.shade600, Colors.green.shade400],
-                      onTap: () => _navigateTo(context, const AlacenaScreen()),
-                    ),
-                    const Spacer(),
-                    _buildOfflineBadge(theme, colorScheme),
-                    const SizedBox(height: 16),
-                    _buildAboutButton(theme, colorScheme),
-                    const SizedBox(height: 8),
-                    _buildFooter(theme, colorScheme),
-                  ],
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 10),
+                _buildHeader(theme, colorScheme),
+                const SizedBox(height: 24),
+                _CategoryCard(
+                  title: 'Refrigeración',
+                  subtitle: 'Alimentos refrigerados y congelados',
+                  icon: Icons.kitchen,
+                  gradientColors: [Colors.blue.shade600, Colors.cyan.shade400],
+                  onTap: () => _navigateTo(context, const RefrigeracionScreen()),
                 ),
-              ),
+                const SizedBox(height: 16),
+                _CategoryCard(
+                  title: 'Alacena',
+                  subtitle: 'Artículos en despensa',
+                  icon: Icons.shelves,
+                  gradientColors: [Colors.teal.shade600, Colors.green.shade400],
+                  onTap: () => _navigateTo(context, const AlacenaScreen()),
+                ),
+                const SizedBox(height: 16),
+                _buildShoppingListButton(context, theme, colorScheme),
+                const Spacer(),
+                _buildOfflineBadge(theme, colorScheme),
+                const SizedBox(height: 8),
+                _buildAboutButton(theme, colorScheme),
+                const SizedBox(height: 4),
+                _buildFooter(theme, colorScheme),
+              ],
             ),
           ),
         ),
@@ -109,28 +109,25 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Column(
       children: [
         Container(
-          width: 80,
-          height: 80,
+          width: 110,
+          height: 110,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primary,
-                colorScheme.secondary,
-              ],
-            ),
-            borderRadius: BorderRadius.circular(24),
+            color: Colors.white,
+            shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: colorScheme.primary.withAlpha(80),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: colorScheme.primary.withAlpha(60),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
-          child: const Icon(
-            Icons.home_outlined,
-            color: Colors.white,
-            size: 40,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Image.asset(
+              'assets/logo.png',
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -204,6 +201,105 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         style: TextStyle(
           color: colorScheme.primary,
           fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShoppingListButton(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+    final foodProvider = Provider.of<FoodProvider>(context, listen: false);
+    final itemsToBuy = foodProvider.getItemsToBuy();
+    final lowStockItems = foodProvider.getLowStockItems();
+    final totalNotifications = itemsToBuy.length + lowStockItems.length;
+    
+    return GestureDetector(
+      onTap: () => _navigateTo(context, const ShoppingListScreen()),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.purple.shade600, Colors.pink.shade400],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.purple.withAlpha(80),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(50),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 36,
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Lista de Compras',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    totalNotifications > 0
+                        ? '$totalNotifications productos necesitan atención'
+                        : 'Todo bien por ahora',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withAlpha(200),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (totalNotifications > 0) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$totalNotifications',
+                  style: TextStyle(
+                    color: Colors.purple.shade700,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(40),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+          ],
         ),
       ),
     );

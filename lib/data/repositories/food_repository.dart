@@ -18,6 +18,13 @@ class FoodRepository {
     await _databaseService.deleteFoodItem(id);
   }
 
+  Future<void> deleteAllFoodItems() async {
+    final items = _databaseService.getAllFoodItems();
+    for (var item in items) {
+      await _databaseService.deleteFoodItem(item.id);
+    }
+  }
+
   List<FoodItem> getAllFoodItems() {
     return _databaseService.getAllFoodItems();
   }

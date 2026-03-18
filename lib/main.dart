@@ -7,7 +7,9 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'core/constants/app_constants.dart';
 import 'data/database/database_service.dart';
+import 'data/models/food_item.dart';
 import 'data/repositories/food_repository.dart';
+import 'data/services/notification_service.dart';
 import 'presentation/providers/food_provider.dart';
 import 'presentation/screens/home_screen.dart';
 
@@ -26,6 +28,10 @@ void main() async {
   final databaseService = await DatabaseService.getInstance();
   final foodRepository = FoodRepository(databaseService);
   
+  await NotificationService().initialize();
+  await _resetAndAddSampleData(foodRepository);
+  await _checkAndNotify(foodRepository);
+  
   runApp(
     MultiProvider(
       providers: [
@@ -38,6 +44,48 @@ void main() async {
   );
 }
 
+Future<void> _resetAndAddSampleData(FoodRepository repository) async {
+  final now = DateTime.now();
+  
+  // Limpiar TODOS los datos existentes
+  final existing = repository.getAllFoodItems();
+  for (var item in existing) {
+    await repository.deleteFoodItem(item.id);
+  }
+  
+  // Agregar datos frescos - Refrigeración
+  await repository.addFoodItem(FoodItem(id: 'r1', category: 'Refrigeración', name: 'Leche', quantity: 2, entryDate: now, expirationDate: now.add(const Duration(days: 5))));
+  await repository.addFoodItem(FoodItem(id: 'r2', category: 'Refrigeración', type: 'Refrigerado', name: 'Queso', quantity: 1, entryDate: now.subtract(const Duration(days: 3)), expirationDate: now.add(const Duration(days: 2))));
+  await repository.addFoodItem(FoodItem(id: 'r3', category: 'Refrigeración', name: 'Huevos', quantity: 0, entryDate: now.subtract(const Duration(days: 5)), expirationDate: now.add(const Duration(days: 9))));
+  await repository.addFoodItem(FoodItem(id: 'r4', category: 'Refrigeración', type: 'Congelado', name: 'Pollo', quantity: 3, entryDate: now.subtract(const Duration(days: 2)), expirationDate: now.add(const Duration(days: 1))));
+  
+  // Agregar datos frescos - Alacena
+  await repository.addFoodItem(FoodItem(id: 'a1', category: 'Alacena', name: 'Arroz', quantity: 5, entryDate: now.subtract(const Duration(days: 10)), expirationDate: now.add(const Duration(days: 180))));
+  await repository.addFoodItem(FoodItem(id: 'a2', category: 'Alacena', name: 'Fideos', quantity: 0, entryDate: now.subtract(const Duration(days: 30)), expirationDate: now.add(const Duration(days: 90))));
+  await repository.addFoodItem(FoodItem(id: 'a3', category: 'Alacena', name: 'Salsa de Tomate', quantity: 0, entryDate: now.subtract(const Duration(days: 60)), expirationDate: now.add(const Duration(days: 30))));
+  await repository.addFoodItem(FoodItem(id: 'a4', category: 'Alacena', name: 'Atún', quantity: 4, entryDate: now.subtract(const Duration(days: 15)), expirationDate: now.add(const Duration(days: 2))));
+}
+
+Future<void> _checkAndNotify(FoodRepository repository) async {
+  final allItems = repository.getAllFoodItems();
+  final now = DateTime.now();
+  
+  final itemsToBuy = allItems.where((item) => item.quantity == 0).toList();
+  final expiringItems = allItems.where((item) {
+    if (item.quantity == 0) return false;
+    final daysUntilExpiry = item.expirationDate.difference(now).inDays;
+    return daysUntilExpiry <= 3 && daysUntilExpiry >= 0;
+  }).toList();
+  
+  if (itemsToBuy.isNotEmpty) {
+    await NotificationService().scheduleMissingItemsNotification(itemsToBuy);
+  }
+  
+  if (expiringItems.isNotEmpty) {
+    await NotificationService().scheduleExpiryReminder(expiringItems);
+  }
+}
+
 class GestorAlimentosApp extends StatelessWidget {
   const GestorAlimentosApp({super.key});
 
@@ -46,6 +94,8 @@ class GestorAlimentosApp extends StatelessWidget {
     return MaterialApp(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
+      shortcuts: {},
+      actions: {},
       theme: _buildLightTheme(),
       darkTheme: _buildDarkTheme(),
       themeMode: ThemeMode.system,
