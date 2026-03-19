@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildShoppingListButton(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
-    final foodProvider = Provider.of<FoodProvider>(context, listen: false);
+    final foodProvider = Provider.of<FoodProvider>(context);
     final itemsToBuy = foodProvider.getItemsToBuy();
     final lowStockItems = foodProvider.getLowStockItems();
     final totalNotifications = itemsToBuy.length + lowStockItems.length;

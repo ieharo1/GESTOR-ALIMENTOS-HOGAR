@@ -99,26 +99,6 @@ GESTOR-ALIMENTOS-HOGAR/
 
 ---
 
-## 📥 Descargar e Instalar
-
-### 📱 Android
-
-**Descarga el APK desde el Release:**
-👉 [Descargar GestorAlimentos-v1.0.0.apk](https://github.com/ieharo1/GESTOR-ALIMENTOS-HOGAR/releases/download/v1.0.0/GestorAlimentos-v1.0.0.apk)
-
-**O desde la página de Releases:**
-1. Ve a [Releases](https://github.com/ieharo1/GESTOR-ALIMENTOS-HOGAR/releases/tag/v1.0.0)
-2. Descarga el archivo `GestorAlimentos-v1.0.0.apk`
-3. Transfiérelo a tu teléfono Android
-4. Ábrelo e instálalo (permite fuentes desconocidas)
-5. ¡Listo! 🥚
-
-### 📋 Requisitos
-
-- Android 5.0+ (API 21 o superior)
-
----
-
 ## 🚀 Cómo Ejecutar el Proyecto
 
 ### 1. Clonar el Repositorio
@@ -137,7 +117,7 @@ flutter pub get
 flutter run
 ```
 
-### 4. Compilar APK Debug
+### 4. Compilar APK
 ```bash
 flutter build apk --debug
 ```
